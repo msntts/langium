@@ -32,7 +32,8 @@ export function startLanguageServer(services: LangiumServices): void {
                 definitionProvider: {},
                 documentHighlightProvider: {},
                 // hoverProvider needs to be created for mouse-over events, etc.
-                hoverProvider: false
+                hoverProvider: false,
+                monikerProvider: {}
             }
         };
         if (hasWorkspaceFolderCapability) {
@@ -47,8 +48,15 @@ export function startLanguageServer(services: LangiumServices): void {
 
     const documents = services.documents.TextDocuments;
     const documentBuilder = services.documents.DocumentBuilder;
+    const monikerProvider = services.references.MonikerProvider;
     documents.onDidChangeContent(change => {
         documentBuilder.build(change.document);
+        if(change.document.parseResult?.value) {
+            const monikers = monikerProvider.createMonikers(change.document.parseResult?.value);
+            monikers.forEach(m => {
+                console.warn(m);
+            });
+        }
     });
 
     addCompletionHandler(connection, services);

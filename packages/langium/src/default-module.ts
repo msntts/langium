@@ -16,6 +16,7 @@ import { DefaultGoToResolverProvider } from './lsp/goto';
 import { DefaultReferenceFinder } from './lsp/reference-finder';
 import { DefaultValueConverter } from './parser/value-converter';
 import { DefaultLinker } from './references/linker';
+import { DefaultMonikerProvider } from './references/moniker';
 import { DefaultNameProvider } from './references/naming';
 import { DefaultReferences } from './references/references';
 import { DefaultScopeComputation, DefaultScopeProvider } from './references/scope';
@@ -53,7 +54,8 @@ export function createDefaultModule(context: DefaultModuleContext = {}): Module<
             NameProvider: () => new DefaultNameProvider(),
             ScopeProvider: (injector) => new DefaultScopeProvider(injector),
             ScopeComputation: (injector) => new DefaultScopeComputation(injector),
-            References: (injector) => new DefaultReferences(injector)
+            References: (injector) => new DefaultReferences(injector),
+            MonikerProvider: (injector) => new DefaultMonikerProvider(injector)
         },
         serializer: {
             JsonSerializer: (injector) => new DefaultJsonSerializer(injector)

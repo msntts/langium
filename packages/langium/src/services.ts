@@ -25,6 +25,7 @@ import { References } from './references/references';
 import { ValidationRegistry } from './validation/validation-registry';
 import { DocumentValidator } from './validation/document-validator';
 import { LanguageMetaData } from './grammar/language-meta-data';
+import { MonikerProvider } from './references/moniker';
 
 export type LangiumGeneratedServices = {
     parser: {
@@ -62,6 +63,7 @@ export type LangiumDefaultServices = {
         References: References
         ScopeProvider: ScopeProvider
         ScopeComputation: ScopeComputation
+        MonikerProvider: MonikerProvider
     }
     serializer: {
         JsonSerializer: JsonSerializer
