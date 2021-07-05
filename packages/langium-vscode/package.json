@@ -35,7 +35,8 @@
     "clean": "rimraf out",
     "build": "webpack",
     "watch": "webpack --watch",
-    "lint": "eslint src --ext ts"
+    "lint": "eslint src --ext ts",
+    "test": "echo \"No test specified\""
   },
   "dependencies": {
     "langium": "0.1.0",

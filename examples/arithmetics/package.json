@@ -48,6 +48,7 @@
         "build": "tsc",
         "watch": "tsc -watch",
         "lint": "eslint src --ext ts",
+        "test": "echo \"No test specified\"",
         "langium:generate": "langium generate"
     },
     "dependencies": {
