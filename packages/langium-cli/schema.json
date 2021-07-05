@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "definitions": {
+    "$defs": {
         "config": {
             "type": "object",
             "additionalProperties": false,
@@ -41,13 +41,13 @@
     },
     "anyOf": [
         {
-            "$ref": "#/definitions/config"
+            "$ref": "#/$defs/config"
         },
         {
             "type": "array",
             "description": "...",
             "items": {
-                "$ref": "#/definitions/config"
+                "$ref": "#/$defs/config"
             }
         }
     ]

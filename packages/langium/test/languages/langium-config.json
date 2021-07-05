@@ -1,0 +1,14 @@
+[
+    {
+        "languageId": "domain-model-test",
+        "grammar": "domain-model/domain-model.langium",
+        "extensions": [".dmodel"],
+        "out": "domain-model/generated"
+    },
+    {
+        "languageId": "statemachine-test",
+        "grammar": "statemachine/statemachine.langium",
+        "extensions": [".statemachine"],
+        "out": "statemachine/generated"
+    }
+ ]
