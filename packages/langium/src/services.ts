@@ -26,6 +26,7 @@ import { ValidationRegistry } from './validation/validation-registry';
 import { DocumentValidator } from './validation/document-validator';
 import { LanguageMetaData } from './grammar/language-meta-data';
 import { MonikerProvider } from './references/moniker';
+import { IndexManager } from './index/workspace-index-manager';
 
 export type LangiumGeneratedServices = {
     parser: {
@@ -57,6 +58,9 @@ export type LangiumDefaultServices = {
         TextDocuments: TextDocuments<LangiumDocument>
     }
     lsp: LangiumLspServices
+    index: {
+        IndexManager: IndexManager
+    }
     references: {
         Linker: Linker
         NameProvider: NameProvider
