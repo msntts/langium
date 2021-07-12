@@ -99,7 +99,6 @@
 				"--verbose",
 				"-i",
 				"--no-cache",
-				"--watchAll"
 			],
 			"console": "integratedTerminal",
 			"internalConsoleOptions": "neverOpen"
@@ -115,7 +114,6 @@
 				"--verbose",
 				"-i",
 				"--no-cache",
-				"--watchAll"
 			],
 			"console": "integratedTerminal",
 			"internalConsoleOptions": "neverOpen"

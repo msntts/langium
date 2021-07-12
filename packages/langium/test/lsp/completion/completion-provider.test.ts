@@ -4,7 +4,7 @@
  * terms of the MIT License, which is available in the project root.
  ******************************************************************************/
 
-import { createLangiumGrammarServices, LangiumDocumentConfiguration, ParserRule } from '../../../lib';
+import { createLangiumGrammarServices, LangiumDocumentConfiguration, ParserRule } from '../../../src';
 
 describe('Completion Provider', () => {
     test('case insensitive prefix matching', () => {
@@ -22,7 +22,7 @@ describe('Completion Provider', () => {
         document.parseResult = parseResult;
         document.precomputedScopes = services.references.ScopeComputation.computeScope(document);
         const rootNode = parseResult.value;
-        const completionProvider =services.lsp.completion.CompletionProvider;
+        const completionProvider = services.lsp.completion.CompletionProvider;
         const completions = completionProvider.getCompletion(rootNode, model.lastIndexOf('aa') + 2);
         expect(completions.items.some(e=>e.label === 'Aaaa' && e.detail === ParserRule)).toBe(true);
         expect(completions.items.some(e=>e.label === 'aaaa' && e.detail === ParserRule)).toBe(true);

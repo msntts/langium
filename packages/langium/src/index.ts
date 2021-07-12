@@ -36,4 +36,5 @@ export * from './utils/ast-util';
 export * from './utils/cst-util';
 export * from './utils/regex-util';
 export * from './utils/stream';
+export * from './utils/file-utils';
 
