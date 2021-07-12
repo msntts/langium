@@ -27,6 +27,7 @@ import { DocumentValidator } from './validation/document-validator';
 import { LanguageMetaData } from './grammar/language-meta-data';
 import { MonikerProvider } from './references/moniker';
 import { IndexManager } from './index/workspace-index-manager';
+import { AstNodePathComputer } from './index/ast-node-locator';
 
 export type LangiumGeneratedServices = {
     parser: {
@@ -60,6 +61,7 @@ export type LangiumDefaultServices = {
     lsp: LangiumLspServices
     index: {
         IndexManager: IndexManager
+        AstNodePathComputer: AstNodePathComputer
     }
     references: {
         Linker: Linker
