@@ -8,14 +8,14 @@ import * as fs from 'fs';
 import colors from 'colors';
 import { Command } from 'commander';
 import { Grammar, LangiumDocumentConfiguration, DefaultDocumentValidator } from 'langium';
-import { createArithmeticsServices } from './language-server/arithmetics-module';
-import { isModule } from './language-server/generated/ast';
+import { createArithmeticsServices } from '../language-server/arithmetics-module';
+import { isModule } from '../language-server/generated/ast';
 import { ArithmeticsInterpreter } from './interpreter';
 
 const program = new Command();
 program
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    .version(require('../package.json').version);
+    .version(require('../../package.json').version);
 
 program
     .command('eval')
