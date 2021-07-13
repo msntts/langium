@@ -7,11 +7,10 @@
 import colors from 'colors';
 import { Command } from 'commander';
 import { createArithmeticsServices } from '../language-server/arithmetics-module';
-import { isModule } from '../language-server/generated/ast';
+import { Module } from '../language-server/generated/ast';
 import { ArithmeticsInterpreter } from './interpreter';
 import { ArithmeticsLanguageMetaData } from '../language-server/generated/meta-data';
 import { extractDocument } from './cli-util';
-import { Grammar } from 'langium';
 
 const program = new Command();
 program
@@ -25,14 +24,12 @@ program
     .action((fileName: string) => {
         const metaData = new ArithmeticsLanguageMetaData();
         const document = extractDocument(fileName, metaData.languageId, metaData.extensions, createArithmeticsServices());
-        const grammar = document.parseResult?.value as Grammar;
-        if (isModule(grammar)) {
-            for (const [evaluation, value] of new ArithmeticsInterpreter().eval(grammar)) {
-                const cstNode = evaluation.expression.$cstNode;
-                if (cstNode) {
-                    const line = document.positionAt(cstNode.offset).line + 1;
-                    console.log(`line ${line}:`, colors.green(cstNode.text), '===>', value);
-                }
+        const module = document.parseResult?.value as Module;
+        for (const [evaluation, value] of new ArithmeticsInterpreter(module).eval()) {
+            const cstNode = evaluation.expression.$cstNode;
+            if (cstNode) {
+                const line = document.positionAt(cstNode.offset).line + 1;
+                console.log(`line ${line}:`, colors.green(cstNode.text), '===>', value);
             }
         }
     });

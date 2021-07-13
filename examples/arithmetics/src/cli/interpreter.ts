@@ -7,17 +7,17 @@
 import { AbstractDefinition, Definition, Evaluation, Expression, isAddition, isDefinition, isDivision, isEvaluation, isFunctionCall, isMultiplication, isNumberLiteral, isSubtraction, Module, Statement } from '../language-server/generated/ast';
 
 export class ArithmeticsInterpreter {
-    // variable name --> value
+    private module: Module;
     private context: Map<string, number | Definition>;
-    // expression --> value
     private result = new Map<Evaluation, number>();
 
-    constructor(context: Map<string, number | Definition> = new Map<string, number | Definition>()) {
+    constructor(module: Module, context: Map<string, number | Definition> = new Map<string, number | Definition>()) {
+        this.module = module;
         this.context = context;
     }
 
-    public eval(module: Module): Map<Evaluation, number> {
-        module.statements.forEach(stmt => this.evalStatement(stmt));
+    public eval(): Map<Evaluation, number> {
+        this.module.statements.forEach(stmt => this.evalStatement(stmt));
         return this.result;
     }
 
@@ -37,7 +37,7 @@ export class ArithmeticsInterpreter {
         this.result.set(evaluation, this.evalExpression(evaluation.expression));
     }
 
-    public evalExpression(expr: Expression): number {
+    private evalExpression(expr: Expression): number {
         if (isAddition(expr)) {
             const left = this.evalExpression(expr.left);
             const right = this.evalExpression(expr.right);
