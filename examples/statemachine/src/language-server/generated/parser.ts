@@ -16,7 +16,8 @@ const ML_COMMENT = createToken({ name: 'ML_COMMENT', pattern: /\/\*[\s\S]*?\*\//
 const SL_COMMENT = createToken({ name: 'SL_COMMENT', pattern: /\/\/[^\n\r]*/, group: 'hidden' });
 const STRING = createToken({ name: 'STRING', pattern: /"[^"]*"|'[^']*'/ });
 const WS = createToken({ name: 'WS', pattern: /\s+/, group: Lexer.SKIPPED });
-const ResetEventsKeyword = createToken({ name: 'ResetEventsKeyword', pattern: /resetEvents/, longer_alt: ID });
+const InitialStateKeyword = createToken({ name: 'InitialStateKeyword', pattern: /initialState/, longer_alt: ID });
+const StatemachineKeyword = createToken({ name: 'StatemachineKeyword', pattern: /statemachine/, longer_alt: ID });
 const CommandsKeyword = createToken({ name: 'CommandsKeyword', pattern: /commands/, longer_alt: ID });
 const ActionsKeyword = createToken({ name: 'ActionsKeyword', pattern: /actions/, longer_alt: ID });
 const EventsKeyword = createToken({ name: 'EventsKeyword', pattern: /events/, longer_alt: ID });
@@ -33,9 +34,10 @@ ActionsKeyword.LABEL = "'actions'";
 CommandsKeyword.LABEL = "'commands'";
 EndKeyword.LABEL = "'end'";
 EventsKeyword.LABEL = "'events'";
-ResetEventsKeyword.LABEL = "'resetEvents'";
+InitialStateKeyword.LABEL = "'initialState'";
 StateKeyword.LABEL = "'state'";
-const tokens = [ResetEventsKeyword, CommandsKeyword, ActionsKeyword, EventsKeyword, StateKeyword, EndKeyword, EqualsMoreThanKeyword, CurlyCloseKeyword, CurlyOpenKeyword, ID, INT, ML_COMMENT, SL_COMMENT, STRING, WS];
+StatemachineKeyword.LABEL = "'statemachine'";
+const tokens = [InitialStateKeyword, StatemachineKeyword, CommandsKeyword, ActionsKeyword, EventsKeyword, StateKeyword, EndKeyword, EqualsMoreThanKeyword, CurlyCloseKeyword, CurlyOpenKeyword, ID, INT, ML_COMMENT, SL_COMMENT, STRING, WS];
 
 export class Parser extends LangiumParser {
     readonly grammarAccess: StatemachineGrammarAccess;
@@ -46,29 +48,23 @@ export class Parser extends LangiumParser {
 
     Statemachine = this.MAIN_RULE("Statemachine", Statemachine, () => {
         this.initializeElement(this.grammarAccess.Statemachine);
-        this.action(Statemachine, this.grammarAccess.Statemachine.StatemachineAction);
+        this.consume(1, StatemachineKeyword, this.grammarAccess.Statemachine.StatemachineKeyword);
+        this.consume(2, ID, this.grammarAccess.Statemachine.nameIDRuleCall);
         this.option(1, () => {
-            this.consume(1, EventsKeyword, this.grammarAccess.Statemachine.EventsKeyword);
+            this.consume(3, EventsKeyword, this.grammarAccess.Statemachine.EventsKeyword);
             this.atLeastOne(1, () => {
                 this.subrule(1, this.Event, this.grammarAccess.Statemachine.eventsEventRuleCall);
             });
-            this.consume(2, EndKeyword, this.grammarAccess.Statemachine.EndKeyword);
         });
         this.option(2, () => {
-            this.consume(3, ResetEventsKeyword, this.grammarAccess.Statemachine.ResetEventsKeyword);
+            this.consume(4, CommandsKeyword, this.grammarAccess.Statemachine.CommandsKeyword);
             this.atLeastOne(2, () => {
-                this.consume(4, ID, this.grammarAccess.Statemachine.resetEventsEventCrossReference);
-            });
-            this.consume(5, EndKeyword, this.grammarAccess.Statemachine.EndKeyword);
-        });
-        this.option(3, () => {
-            this.consume(6, CommandsKeyword, this.grammarAccess.Statemachine.CommandsKeyword);
-            this.atLeastOne(3, () => {
                 this.subrule(2, this.Command, this.grammarAccess.Statemachine.commandsCommandRuleCall);
             });
-            this.consume(7, EndKeyword, this.grammarAccess.Statemachine.EndKeyword);
         });
-        this.many(4, () => {
+        this.consume(5, InitialStateKeyword, this.grammarAccess.Statemachine.InitialStateKeyword);
+        this.consume(6, ID, this.grammarAccess.Statemachine.initStateCrossReference);
+        this.many(3, () => {
             this.subrule(3, this.State, this.grammarAccess.Statemachine.statesStateRuleCall);
         });
         return this.construct();
@@ -77,14 +73,12 @@ export class Parser extends LangiumParser {
     Event = this.DEFINE_RULE("Event", Event, () => {
         this.initializeElement(this.grammarAccess.Event);
         this.consume(1, ID, this.grammarAccess.Event.nameIDRuleCall);
-        this.consume(2, ID, this.grammarAccess.Event.codeIDRuleCall);
         return this.construct();
     });
 
     Command = this.DEFINE_RULE("Command", Command, () => {
         this.initializeElement(this.grammarAccess.Command);
         this.consume(1, ID, this.grammarAccess.Command.nameIDRuleCall);
-        this.consume(2, ID, this.grammarAccess.Command.codeIDRuleCall);
         return this.construct();
     });
 

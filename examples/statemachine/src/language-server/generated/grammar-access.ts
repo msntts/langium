@@ -3,21 +3,22 @@
  * DO NOT EDIT MANUALLY!
  ******************************************************************************/
 
-import { Action, Assignment, CrossReference, Keyword, RuleCall, GrammarAccess } from 'langium';
+import { Assignment, CrossReference, Keyword, RuleCall, GrammarAccess } from 'langium';
 import grammar from './grammar';
 
 export type StatemachineRuleAccess = {
-    StatemachineAction: Action;
+    StatemachineKeyword: Keyword;
+    name: Assignment;
+    nameIDRuleCall: RuleCall;
     EventsKeyword: Keyword;
     events: Assignment;
     eventsEventRuleCall: RuleCall;
-    EndKeyword: Keyword;
-    ResetEventsKeyword: Keyword;
-    resetEvents: Assignment;
-    resetEventsEventCrossReference: CrossReference;
     CommandsKeyword: Keyword;
     commands: Assignment;
     commandsCommandRuleCall: RuleCall;
+    InitialStateKeyword: Keyword;
+    init: Assignment;
+    initStateCrossReference: CrossReference;
     states: Assignment;
     statesStateRuleCall: RuleCall;
 }
@@ -25,15 +26,11 @@ export type StatemachineRuleAccess = {
 export type EventRuleAccess = {
     name: Assignment;
     nameIDRuleCall: RuleCall;
-    code: Assignment;
-    codeIDRuleCall: RuleCall;
 }
 
 export type CommandRuleAccess = {
     name: Assignment;
     nameIDRuleCall: RuleCall;
-    code: Assignment;
-    codeIDRuleCall: RuleCall;
 }
 
 export type StateRuleAccess = {

@@ -30,9 +30,21 @@ const grammar = (): Grammar => loadGrammar(`{
         "$type": "Group",
         "elements": [
           {
-            "$type": "Action",
-            "type": "Statemachine",
+            "$type": "Keyword",
+            "value": "statemachine",
             "elements": []
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "arguments": [],
+              "rule": {
+                "$refName": "ID"
+              }
+            }
           },
           {
             "$type": "Group",
@@ -54,37 +66,6 @@ const grammar = (): Grammar => loadGrammar(`{
                   }
                 },
                 "cardinality": "+"
-              },
-              {
-                "$type": "Keyword",
-                "value": "end"
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "resetEvents",
-                "elements": []
-              },
-              {
-                "$type": "Assignment",
-                "feature": "resetEvents",
-                "operator": "+=",
-                "terminal": {
-                  "$type": "CrossReference",
-                  "type": {
-                    "$refName": "Event"
-                  }
-                },
-                "cardinality": "+"
-              },
-              {
-                "$type": "Keyword",
-                "value": "end"
               }
             ],
             "cardinality": "?"
@@ -109,13 +90,24 @@ const grammar = (): Grammar => loadGrammar(`{
                   }
                 },
                 "cardinality": "+"
-              },
-              {
-                "$type": "Keyword",
-                "value": "end"
               }
             ],
             "cardinality": "?"
+          },
+          {
+            "$type": "Keyword",
+            "value": "initialState"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "init",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$refName": "State"
+              }
+            }
           },
           {
             "$type": "Assignment",
@@ -139,34 +131,17 @@ const grammar = (): Grammar => loadGrammar(`{
       "name": "Event",
       "hiddenTokens": [],
       "alternatives": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refName": "ID"
-              }
-            },
-            "elements": []
-          },
-          {
-            "$type": "Assignment",
-            "feature": "code",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refName": "ID"
-              }
-            }
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "RuleCall",
+          "arguments": [],
+          "rule": {
+            "$refName": "ID"
           }
-        ]
+        },
+        "elements": []
       }
     },
     {
@@ -175,34 +150,17 @@ const grammar = (): Grammar => loadGrammar(`{
       "name": "Command",
       "hiddenTokens": [],
       "alternatives": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refName": "ID"
-              }
-            },
-            "elements": []
-          },
-          {
-            "$type": "Assignment",
-            "feature": "code",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "arguments": [],
-              "rule": {
-                "$refName": "ID"
-              }
-            }
+        "$type": "Assignment",
+        "feature": "name",
+        "operator": "=",
+        "terminal": {
+          "$type": "RuleCall",
+          "arguments": [],
+          "rule": {
+            "$refName": "ID"
           }
-        ]
+        },
+        "elements": []
       }
     },
     {
