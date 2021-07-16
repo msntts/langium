@@ -6,7 +6,7 @@
 
 import {
     CompletionList, Connection,
-    DocumentHighlightParams, DocumentSymbol, DocumentSymbolParams, InitializeParams, InitializeResult,
+    DocumentHighlightParams, DocumentSymbol, DocumentSymbolParams, FoldingRange, FoldingRangeParams, InitializeParams, InitializeResult,
     Location, LocationLink, ReferenceParams, TextDocumentPositionParams, TextDocumentSyncKind
 } from 'vscode-languageserver/node';
 import { LangiumDocument } from '../documents/document';
@@ -31,6 +31,7 @@ export function startLanguageServer(services: LangiumServices): void {
                 documentSymbolProvider: {},
                 definitionProvider: {},
                 documentHighlightProvider: {},
+                foldingRangeProvider: {},
                 // hoverProvider needs to be created for mouse-over events, etc.
                 hoverProvider: false
             }
@@ -56,6 +57,7 @@ export function startLanguageServer(services: LangiumServices): void {
     addDocumentSymbolHandler(connection, services);
     addGotoDefinition(connection, services);
     addDocumentHighlightsHandler(connection, services);
+    addFoldingRangeHandler(connection, services);
 
     // Make the text document manager listen on the connection for open, change and close text document events.
     documents.listen(connection);
@@ -132,6 +134,18 @@ export function addDocumentHighlightsHandler(connection: Connection, services: L
         const document = paramsDocument(params, services);
         if (document) {
             return documentHighlighter.findHighlights(document, params);
+        } else {
+            return [];
+        }
+    });
+}
+
+export function addFoldingRangeHandler(connection: Connection, services: LangiumServices): void {
+    const foldingRangeProvider = services.lsp.FoldingRangeProvider;
+    connection.onFoldingRanges((params: FoldingRangeParams): FoldingRange[] => {
+        const document = paramsDocument(params, services);
+        if (document) {
+            return foldingRangeProvider.getFoldingRanges(document);
         } else {
             return [];
         }

@@ -9,6 +9,7 @@ import { LangiumGrammarValidationRegistry, LangiumGrammarValidator } from './lan
 import { PartialLangiumServices, LangiumServices } from '../services';
 import { DefaultModuleContext, createDefaultModule } from '../default-module';
 import { LangiumGrammarGeneratedModule } from './generated/module';
+import { LangiumGrammarFoldingRangeProvider } from './lsp/langium-grammar-folding-range-provider';
 
 export type LangiumGrammarAddedServices = {
     validation: {
@@ -22,6 +23,9 @@ export const LangiumGrammarModule: Module<LangiumGrammarServices, PartialLangium
     validation: {
         ValidationRegistry: (injector) => new LangiumGrammarValidationRegistry(injector),
         LangiumGrammarValidator: () => new LangiumGrammarValidator()
+    },
+    lsp: {
+        FoldingRangeProvider: (injector) => new LangiumGrammarFoldingRangeProvider(injector)
     }
 };
 

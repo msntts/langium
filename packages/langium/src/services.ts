@@ -25,6 +25,7 @@ import { References } from './references/references';
 import { ValidationRegistry } from './validation/validation-registry';
 import { DocumentValidator } from './validation/document-validator';
 import { LanguageMetaData } from './grammar/language-meta-data';
+import { FoldingRangeProvider } from './lsp/folding-range-provider';
 
 export type LangiumGeneratedServices = {
     parser: {
@@ -43,12 +44,14 @@ export type LangiumLspServices = {
     Connection?: Connection
     DocumentHighlighter: DocumentHighlighter
     DocumentSymbolProvider: DocumentSymbolProvider
+    FoldingRangeProvider: FoldingRangeProvider
     GoToResolver: GoToResolver
     ReferenceFinder: ReferenceFinder
 }
 
 export type LangiumDefaultServices = {
     parser: {
+        MultilineComment: string
         ValueConverter: ValueConverter
     }
     documents: {

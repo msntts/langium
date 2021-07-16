@@ -12,6 +12,7 @@ import { DefaultCompletionProvider } from './lsp/completion/completion-provider'
 import { RuleInterpreter } from './lsp/completion/rule-interpreter';
 import { DefaultDocumentHighlighter } from './lsp/document-highlighter';
 import { DefaultDocumentSymbolProvider } from './lsp/document-symbol-provider';
+import { DefaultFoldingRangeProvider } from './lsp/folding-range-provider';
 import { DefaultGoToResolverProvider } from './lsp/goto';
 import { DefaultReferenceFinder } from './lsp/reference-finder';
 import { DefaultValueConverter } from './parser/value-converter';
@@ -31,6 +32,7 @@ export type DefaultModuleContext = {
 export function createDefaultModule(context: DefaultModuleContext = {}): Module<LangiumServices, LangiumDefaultServices> {
     return {
         parser: {
+            MultilineComment: () => 'ML_COMMENT',
             ValueConverter: () => new DefaultValueConverter()
         },
         documents: {
@@ -44,6 +46,7 @@ export function createDefaultModule(context: DefaultModuleContext = {}): Module<
             },
             Connection: () => context.connection,
             DocumentSymbolProvider: (injector) => new DefaultDocumentSymbolProvider(injector),
+            FoldingRangeProvider: (injector) => new DefaultFoldingRangeProvider(injector),
             ReferenceFinder:  (injector) => new DefaultReferenceFinder(injector),
             GoToResolver: (injector) => new DefaultGoToResolverProvider(injector),
             DocumentHighlighter: (injector) => new DefaultDocumentHighlighter(injector)
