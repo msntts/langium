@@ -91,16 +91,17 @@ export class LangiumParser {
     }
 
     private addHiddenToken(node: CompositeCstNode, token: LeafCstNode): void {
-        if (node.offset >= token.offset + token.length) {
+        const { start, end } = node.range;
+        const { start: tokenStart, end: tokenEnd } = token.range;
+        if (start >= tokenEnd) {
             node.children.unshift(token);
-        } else if (node.offset + node.length <= token.offset) {
+        } else if (end <= tokenStart) {
             node.children.push(token);
         } else {
-            const tokenEnd = token.offset + token.length;
             for (let i = 0; i < node.children.length; i++) {
                 const child = node.children[i];
-                const childEnd = child.offset + child.length;
-                if (child instanceof CompositeCstNodeImpl && token.offset > child.offset && tokenEnd < childEnd) {
+                const { start: childStart, end: childEnd } = child.range;
+                if (child instanceof CompositeCstNodeImpl && tokenStart > childStart && tokenEnd < childEnd) {
                     this.addHiddenToken(child, token);
                     return;
                 } else if (tokenEnd <= child.offset) {

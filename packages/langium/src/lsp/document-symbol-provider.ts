@@ -35,17 +35,19 @@ export class DefaultDocumentSymbolProvider implements DocumentSymbolProvider {
         const node = astNode.$cstNode;
         const nameNode = this.nameProvider.getNameNode(astNode);
         if (nameNode && node) {
+            const { start, end } = node.range;
+            const { start: nameStart, end: nameEnd } = nameNode.range;
             const name = this.nameProvider.getName(astNode);
             return [{
                 kind: this.getSymbolKind(astNode.$type),
                 name: name ?? nameNode.text,
                 range: {
-                    start: document.positionAt(node.offset),
-                    end: document.positionAt(node.offset + node.length)
+                    start: document.positionAt(start),
+                    end: document.positionAt(end)
                 },
                 selectionRange: {
-                    start: document.positionAt(nameNode.offset),
-                    end: document.positionAt(nameNode.offset + nameNode.length)
+                    start: document.positionAt(nameStart),
+                    end: document.positionAt(nameEnd)
                 },
                 children: this.getChildSymbols(document, astNode)
             }];

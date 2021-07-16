@@ -21,9 +21,10 @@ export function flatten(node: CstNode): LeafCstNode[] {
 }
 
 export function toRange(node: CstNode, document: LangiumDocument): Range {
+    const { start, end } = node.range;
     return {
-        start: document.positionAt(node.offset),
-        end: document.positionAt(node.offset + node.length)
+        start: document.positionAt(start),
+        end: document.positionAt(end)
     };
 }
 

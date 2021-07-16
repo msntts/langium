@@ -122,8 +122,7 @@ export function getDiagnosticRange<N extends AstNode>(info: DiagnosticInfo<N>, d
             end: { line: 0, character: 0 }
         };
     }
-    const start = cstNode.offset;
-    const end = start + cstNode.length;
+    const { start, end } = cstNode.range;
     return {
         start: document.positionAt(start),
         end: document.positionAt(end)
