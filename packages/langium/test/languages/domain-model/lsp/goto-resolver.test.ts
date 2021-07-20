@@ -4,21 +4,23 @@
  * terms of the MIT License, which is available in the project root.
  ******************************************************************************/
 
+import fs from 'fs-extra';
+import path from 'path';
 import { Diagnostic, Position } from 'vscode-languageserver';
-import { buildRealpath, createLangiumGrammarServices, LangiumDocument, LangiumDocumentConfiguration, LangiumGrammarServices, loadUriContent } from '../../../../src';
+import { createLangiumGrammarServices, LangiumDocument, LangiumDocumentConfiguration, LangiumGrammarServices } from '../../../../src';
 
 let services: LangiumGrammarServices;
 let document: LangiumDocument;
 
 beforeAll(() => {
-    const realPathFile = buildRealpath('packages/langium', 'test/languages/domain-model/domain-model.langium');
-    const grammarFileContent = loadUriContent(realPathFile);
+    const realPathFile = path.join(__dirname, '..', 'domain-model.langium');
+    const grammarFileContent = fs.readFileSync(realPathFile, 'utf-8');
     document = LangiumDocumentConfiguration.create(`file:${realPathFile}`, 'langium', 0, grammarFileContent);
     expect(document).toBeDefined;
 
     services = createLangiumGrammarServices();
     const diagnostics: Diagnostic[] = [];
-    expect(services.documents.DocumentBuilder.build(document, diagnostics)).toBeTruthy;
+    expect(services.documents.DocumentBuilder.build(document)).toBeTruthy;
     expect(diagnostics.length).toEqual(0);
 });
 

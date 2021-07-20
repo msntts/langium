@@ -40,7 +40,7 @@ export class DefaultReferences implements References {
                 if (isReference(reference)) {
                     return this.processReference(reference);
                 }
-                else if (reference instanceof Array) {
+                else if (Array.isArray(reference)) {
                     for (const ref of reference) {
                         if (isReference(ref)) {
                             const target = this.processReference(ref);
