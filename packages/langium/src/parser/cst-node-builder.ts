@@ -7,6 +7,7 @@
 import { IToken, TokenType } from 'chevrotain';
 import { AbstractElement } from '../grammar/generated/ast';
 import { AstNode, CompositeCstNode, CstNode, LeafCstNode } from '../syntax-tree';
+import { Mutable } from '../utils/ast-util';
 
 export class CstNodeBuilder {
 
@@ -39,14 +40,25 @@ export class CstNodeBuilder {
         return leafNode;
     }
 
-    construct(item: { $cstNode: CstNode }): void {
-        this.current.element = <AstNode>item;
-        item.$cstNode = this.reduce(this.current);
+    construct(item: { $type: string | symbol | undefined, $cstNode: CstNode }): void {
+        let current: CstNode = this.current;
+        // The specified item could be a datatype ($type is symbol) or a fragment ($type is undefined)
+        // Only if the $type is a string, we actually assign the element
+        if (typeof item.$type === 'string') {
+            this.current.element = <AstNode>item;
+        }
+        const parent = current.parent;
+        const index = parent?.children?.indexOf(current) || 0;
+        item.$cstNode = current = this.reduce(current);
+        if (parent) {
+            parent.children[index] = current;
+            (current as Mutable<CstNode>).parent = parent;
+        }
         this.nodeStack.pop();
     }
 
     private reduce(node: CstNode): CstNode {
-        if (node instanceof CompositeCstNodeImpl && node.children.length === 1 && node.children[0].element === node.element) {
+        if (node instanceof CompositeCstNodeImpl && node.children.length === 1 && (node.children[0].element === node.element || !node.children[0].element)) {
             return this.reduce(node.children[0]);
         } else {
             return node;
@@ -61,6 +73,10 @@ export abstract class AbstractCstNode implements CstNode {
     feature!: AbstractElement;
     root!: RootCstNodeImpl;
     private _element!: AstNode;
+
+    get hidden(): boolean {
+        return false;
+    }
 
     get element(): AstNode {
         return this._element ?? this.parent?.element;

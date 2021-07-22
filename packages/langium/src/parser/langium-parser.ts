@@ -10,7 +10,7 @@ import { AbstractElement, Action, isAssignment, isCrossReference } from '../gram
 import { LangiumDocument } from '../documents/document';
 import { AstNode, CompositeCstNode, CstNode, LeafCstNode, Reference } from '../syntax-tree';
 import { isArrayOperator } from '../grammar/grammar-util';
-import { CompositeCstNodeImpl, CstNodeBuilder, LeafCstNodeImpl } from './cst-node-builder';
+import { CompositeCstNodeImpl, CstNodeBuilder, LeafCstNodeImpl, RootCstNodeImpl } from './cst-node-builder';
 import { GrammarAccess } from '../grammar/grammar-access';
 import { Linker } from '../references/linker';
 import { LangiumServices } from '../services';
@@ -84,9 +84,11 @@ export class LangiumParser {
         };
     }
 
-    private addHiddenTokens(node: CompositeCstNode, tokens: IToken[]): void {
+    private addHiddenTokens(node: RootCstNodeImpl, tokens: IToken[]): void {
         for (const token of tokens) {
-            this.addHiddenToken(node, new LeafCstNodeImpl(token.startOffset, token.image.length, token.tokenType, true));
+            const hiddenNode = new LeafCstNodeImpl(token.startOffset, token.image.length, token.tokenType, true);
+            hiddenNode.root = node;
+            this.addHiddenToken(node, hiddenNode);
         }
     }
 
@@ -100,7 +102,7 @@ export class LangiumParser {
             for (let i = 0; i < node.children.length; i++) {
                 const child = node.children[i];
                 const childEnd = child.offset + child.length;
-                if (child instanceof CompositeCstNodeImpl && token.offset > child.offset && tokenEnd < childEnd) {
+                if (child instanceof CompositeCstNodeImpl && tokenEnd < childEnd) {
                     this.addHiddenToken(child, token);
                     return;
                 } else if (tokenEnd <= child.offset) {

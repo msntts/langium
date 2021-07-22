@@ -13,6 +13,7 @@ import { RuleInterpreter } from './lsp/completion/rule-interpreter';
 import { DefaultDocumentHighlighter } from './lsp/document-highlighter';
 import { DefaultDocumentSymbolProvider } from './lsp/document-symbol-provider';
 import { DefaultGoToResolverProvider } from './lsp/goto';
+import { MultilineCommentHoverProvider } from './lsp/hover-provider';
 import { DefaultReferenceFinder } from './lsp/reference-finder';
 import { DefaultValueConverter } from './parser/value-converter';
 import { DefaultLinker } from './references/linker';
@@ -44,6 +45,7 @@ export function createDefaultModule(context: DefaultModuleContext = {}): Module<
             },
             Connection: () => context.connection,
             DocumentSymbolProvider: (injector) => new DefaultDocumentSymbolProvider(injector),
+            HoverProvider: (injector) => new MultilineCommentHoverProvider(injector),
             ReferenceFinder:  (injector) => new DefaultReferenceFinder(injector),
             GoToResolver: (injector) => new DefaultGoToResolverProvider(injector),
             DocumentHighlighter: (injector) => new DefaultDocumentHighlighter(injector)

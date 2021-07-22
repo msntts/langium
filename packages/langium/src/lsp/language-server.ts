@@ -6,7 +6,7 @@
 
 import {
     CompletionList, Connection,
-    DocumentHighlightParams, DocumentSymbol, DocumentSymbolParams, InitializeParams, InitializeResult,
+    DocumentHighlightParams, DocumentSymbol, DocumentSymbolParams, Hover, HoverParams, InitializeParams, InitializeResult,
     Location, LocationLink, ReferenceParams, TextDocumentPositionParams, TextDocumentSyncKind
 } from 'vscode-languageserver/node';
 import { LangiumDocument } from '../documents/document';
@@ -31,8 +31,7 @@ export function startLanguageServer(services: LangiumServices): void {
                 documentSymbolProvider: {},
                 definitionProvider: {},
                 documentHighlightProvider: {},
-                // hoverProvider needs to be created for mouse-over events, etc.
-                hoverProvider: false
+                hoverProvider: {}
             }
         };
         if (hasWorkspaceFolderCapability) {
@@ -56,6 +55,7 @@ export function startLanguageServer(services: LangiumServices): void {
     addDocumentSymbolHandler(connection, services);
     addGotoDefinition(connection, services);
     addDocumentHighlightsHandler(connection, services);
+    addHoverHandler(connection, services);
 
     // Make the text document manager listen on the connection for open, change and close text document events.
     documents.listen(connection);
@@ -135,6 +135,14 @@ export function addDocumentHighlightsHandler(connection: Connection, services: L
         } else {
             return [];
         }
+    });
+}
+
+export function addHoverHandler(connection: Connection, services: LangiumServices): void {
+    const hoverProvider = services.lsp.HoverProvider;
+    connection.onHover((params: HoverParams): Hover | undefined => {
+        const document = paramsDocument(params, services);
+        return document && hoverProvider.getHoverContent(document, params.position);
     });
 }
 

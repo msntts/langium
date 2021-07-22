@@ -25,6 +25,7 @@ import { References } from './references/references';
 import { ValidationRegistry } from './validation/validation-registry';
 import { DocumentValidator } from './validation/document-validator';
 import { LanguageMetaData } from './grammar/language-meta-data';
+import { HoverProvider } from './lsp/hover-provider';
 
 export type LangiumGeneratedServices = {
     parser: {
@@ -43,6 +44,7 @@ export type LangiumLspServices = {
     Connection?: Connection
     DocumentHighlighter: DocumentHighlighter
     DocumentSymbolProvider: DocumentSymbolProvider
+    HoverProvider: HoverProvider
     GoToResolver: GoToResolver
     ReferenceFinder: ReferenceFinder
 }

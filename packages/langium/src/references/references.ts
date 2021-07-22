@@ -49,8 +49,10 @@ export class DefaultReferences implements References {
                     }
                 } else {
                     const nameNode = this.nameProvider.getNameNode(nodeElem);
-                    if (nameNode === sourceCstNode) {
-                        return sourceCstNode;
+                    if (nameNode === sourceCstNode
+                        || nameNode && nameNode.offset <= sourceCstNode.offset
+                        && nameNode.offset + nameNode.length > sourceCstNode.offset) {
+                        return nameNode;
                     }
                 }
             }
